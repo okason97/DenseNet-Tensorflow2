@@ -1,4 +1,4 @@
-# Sign Language Recognition
+# DenseNet implementation using Tensorflow 2
 
 ## Quickstart
 
@@ -17,10 +17,11 @@ $ docker build --rm -f dockerfiles/cpu-jupiter.Dockerfile -t sign-language-recog
 and now run the image
 
 ```sh
-$ docker run --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 sign-language-recognition:latest
+$ docker run -v "$(pwd)/notebooks:/tf/notebooks" --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 sign-language-recognition:latest
 ```
 
 Visit that link, hey look your jupyter notebooks are ready to be created.
+Changes in ./notebooks will be saved.
 
 If you want, you can attach a shell to the running container
 
