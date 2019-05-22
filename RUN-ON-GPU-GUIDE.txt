@@ -1,0 +1,7 @@
+sudo docker run -v "$(pwd)/notebooks:/tf/notebooks" --rm -p 6006:6006 -p 8888:8888 --runtime=nvidia -it tensorflow/tensorflow:nightly-gpu-py3-jupyter
+
+In the notebook run
+!pip install -q tf-nightly-gpu-2.0-preview
+
+to test if the gpu is working run
+tf.debugging.set_log_device_placement(True)
