@@ -28,15 +28,3 @@ If you want, you can attach a shell to the running container
 ```sh
 $ docker exec -it <container-id> /bin/sh -c "[ -e /bin/bash ] && /bin/bash || /bin/sh"
 ```
-
-And then you can find the entire source code in `/develop`.
-
-```sh
-$ cd /develop
-```
-
-Test the environment as follow,
-
-```sh
-$ python starterfile.py
-```
