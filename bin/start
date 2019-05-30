@@ -12,5 +12,9 @@ name=${name:-"sign-language-recognition"}
 
 echo "Creating $name container with tag $tag" 
 
-docker build --build-arg DOCKER_ENV=$tag --rm -f dockerfiles/tf-py3-jupyter.Dockerfile -t $name:$tag . && \
-docker run -v "$(pwd)/notebooks:/tf/notebooks" --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 $name:$tag
+if [ "$tag" = "cpu" ] ; 
+then echo with cpu && docker build --build-arg DOCKER_ENV=$tag --rm -f dockerfiles/tf-py3-jupyter.Dockerfile -t $name:$tag . && \
+docker run -v "$(pwd)/notebooks:/tf/notebooks" --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 $name:$tag; 
+else echo with gpu && docker build --rm -f dockerfiles/tf-py3-gpu-jupyter.Dockerfile -t $name:$tag . && \
+docker run -v "$(pwd)/notebooks:/tf/notebooks" --rm -u $(id -u):$(id -g) -p 6007:6007 -p 8889:8889 --runtime=nvidia $name:$tag; 
+fi

@@ -8,6 +8,7 @@ COPY notebooks /tf/notebooks
 RUN apt-get update -q
 RUN apt-get install -y git
 
+
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
