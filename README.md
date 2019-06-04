@@ -16,4 +16,4 @@ Changing nb_layers lenght will change the number of dense layers.
 
 ## References
 Inspired by flyyufelix keras implementation (https://github.com/flyyufelix/DenseNet-Keras).
-
+For more information about densenet please refer to the original paper (https://arxiv.org/abs/1608.06993).
