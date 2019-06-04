@@ -1,30 +1,12 @@
 # DenseNet implementation using Tensorflow 2
 
-## Quickstart
-
+## Instalation
 ```sh
-$ ./bin/start
+$ pip install densenet
 ```
 
-## Setup and use docker
-
-Build the docker image,
-
-```sh
-$ docker build --rm -f dockerfiles/cpu-jupiter.Dockerfile -t sign-language-recognition:latest .
-```
-
-and now run the image
-
-```sh
-$ docker run -v "$(pwd)/notebooks:/tf/notebooks" --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 sign-language-recognition:latest
-```
-
-Visit that link, hey look your jupyter notebooks are ready to be created.
-Changes in ./notebooks will be saved.
-
-If you want, you can attach a shell to the running container
-
-```sh
-$ docker exec -it <container-id> /bin/sh -c "[ -e /bin/bash ] && /bin/bash || /bin/sh"
+## Usage
+```python
+from densenet import densenet_model
+model = densenet_model(classes=n_clases)
 ```
