@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: densenet
+Version: 0.1
+Summary: A densenet implementation using tensorflow2
+Home-page: https://github.com/okason97/DenseNet-Tensorflow2
+Author: Gaston Gustavo Rios
+Author-email: okason1997@hotmail.com
+License: UNKNOWN
+Description: # DenseNet implementation using Tensorflow 2
+        
+        ## Quickstart
+        
+        ```sh
+        $ ./bin/start
+        ```
+        
+        ## Setup and use docker
+        
+        Build the docker image,
+        
+        ```sh
+        $ docker build --rm -f dockerfiles/cpu-jupiter.Dockerfile -t sign-language-recognition:latest .
+        ```
+        
+        and now run the image
+        
+        ```sh
+        $ docker run -v "$(pwd)/notebooks:/tf/notebooks" --rm -u $(id -u):$(id -g) -p 6006:6006 -p 8888:8888 sign-language-recognition:latest
+        ```
+        
+        Visit that link, hey look your jupyter notebooks are ready to be created.
+        Changes in ./notebooks will be saved.
+        
+        If you want, you can attach a shell to the running container
+        
+        ```sh
+        $ docker exec -it <container-id> /bin/sh -c "[ -e /bin/bash ] && /bin/bash || /bin/sh"
+        ```
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown

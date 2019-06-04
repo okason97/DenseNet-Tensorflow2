@@ -1,6 +1,6 @@
-ARG DOCKER_ENV=cpu
+ARG DOCKER_ENV=nightly-gpu-py3
 
-FROM ulisesjeremias/tf-docker:${DOCKER_ENV}-jupyter
+FROM tensorflow/tensorflow:${DOCKER_ENV}-jupyter
 
 ADD . /develop
 COPY notebooks /tf/notebooks
@@ -17,6 +17,7 @@ RUN git clone --branch=develop https://github.com/midusi/handshape_datasets.git 
 RUN pip3 install -e /tf/lib/handshape_datasets
 
 RUN pip3 install -e /develop/protonet-tf
+RUN pip3 install tf-nightly-gpu-2.0-preview
 RUN pip3 install sklearn
 
 RUN mkdir -p /.handshape_datasets
