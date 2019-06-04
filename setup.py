@@ -24,6 +24,11 @@ setuptools.setup(
 
      packages=setuptools.find_packages(),
      
+     install_requires=[
+        'tensorflow==2.0.0-alpha0',
+        'numpy',
+     ],
+
      classifiers=[
 
          "Programming Language :: Python :: 3",

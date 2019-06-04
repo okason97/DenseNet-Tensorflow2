@@ -5,4 +5,5 @@ densenet/densenet.py
 densenet.egg-info/PKG-INFO
 densenet.egg-info/SOURCES.txt
 densenet.egg-info/dependency_links.txt
+densenet.egg-info/requires.txt
 densenet.egg-info/top_level.txt
