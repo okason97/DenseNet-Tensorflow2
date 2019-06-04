@@ -10,7 +10,7 @@ from tensorflow.keras.layers import AveragePooling2D, GlobalAveragePooling2D, Ma
 from tensorflow.keras import Model
 
 def densenet_model(growth_rate=32, nb_filter=64, nb_layers = [6,12,24,16], reduction=0.0, 
-             dropout_rate=0.0, weight_decay=1e-4, classes=16, shape=(32, 32, 3), batch_size=32, with_se_layers=True):
+             dropout_rate=0.0, classes=16, shape=(32, 32, 3), batch_size=32, with_se_layers=True):
     # compute compression factor
     compression = 1.0 - reduction
 
@@ -31,20 +31,20 @@ def densenet_model(growth_rate=32, nb_filter=64, nb_layers = [6,12,24,16], reduc
     # Add dense blocks
     for block_idx in range(nb_dense_block - 1):
         stage = block_idx+2
-        x, nb_filter = dense_block(x, stage, nb_layers[block_idx], nb_filter, growth_rate, dropout_rate=dropout_rate, weight_decay=weight_decay)
+        x, nb_filter = dense_block(x, stage, nb_layers[block_idx], nb_filter, growth_rate, dropout_rate=dropout_rate)
 
         if (with_se_layers):
             x = se_block(x, stage, 'dense', nb_filter)
 
         # Add transition_block
-        x = transition_block(x, stage, nb_filter, compression=compression, dropout_rate=dropout_rate, weight_decay=weight_decay)
+        x = transition_block(x, stage, nb_filter, compression=compression, dropout_rate=dropout_rate)
         nb_filter = int(nb_filter * compression)
 
         if (with_se_layers):
             x = se_block(x, stage, 'transition', nb_filter)
 
     final_stage = stage + 1
-    x, nb_filter = dense_block(x, final_stage, nb_layers[-1], nb_filter, growth_rate, dropout_rate=dropout_rate, weight_decay=weight_decay)
+    x, nb_filter = dense_block(x, final_stage, nb_layers[-1], nb_filter, growth_rate, dropout_rate=dropout_rate)
 
     if (with_se_layers):
         x = se_block(x, final_stage, 'dense', nb_filter)
@@ -57,7 +57,7 @@ def densenet_model(growth_rate=32, nb_filter=64, nb_layers = [6,12,24,16], reduc
     
     return Model(inputs=img_input, outputs=output)
 
-def conv_block(x, stage, branch, nb_filter, dropout_rate=None, weight_decay=1e-4):
+def conv_block(x, stage, branch, nb_filter, dropout_rate=None):
     conv_name_base = 'conv' + str(stage) + '_' + str(branch)
     relu_name_base = 'relu' + str(stage) + '_' + str(branch)
 
@@ -92,12 +92,12 @@ def se_block(x, stage, previous, nb_filter, ratio = 16):
     x = init * tf.expand_dims(x,1) 
     return x
 
-def dense_block(x, stage, nb_layers, nb_filter, growth_rate, dropout_rate=None, weight_decay=1e-4, 
+def dense_block(x, stage, nb_layers, nb_filter, growth_rate, dropout_rate=None, 
                 grow_nb_filters=True):
     concat_feat = x
     for i in range(nb_layers):
         branch = i+1
-        x = conv_block(concat_feat, stage, branch, growth_rate, dropout_rate, weight_decay)
+        x = conv_block(concat_feat, stage, branch, growth_rate, dropout_rate)
         concat_feat = tf.concat([concat_feat, x], -1)
 
         if grow_nb_filters:
@@ -105,7 +105,7 @@ def dense_block(x, stage, nb_layers, nb_filter, growth_rate, dropout_rate=None, 
 
     return concat_feat, nb_filter
 
-def transition_block(x, stage, nb_filter, compression=1.0, dropout_rate=None, weight_decay=1E-4):
+def transition_block(x, stage, nb_filter, compression=1.0, dropout_rate=None):
     conv_name_base = 'conv' + str(stage) + '_blk'
     relu_name_base = 'relu' + str(stage) + '_blk'
     pool_name_base = 'pool' + str(stage) 
