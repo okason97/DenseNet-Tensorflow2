@@ -2,11 +2,9 @@
 # coding: utf-8
 
 import tensorflow as tf
-
 import numpy as np
 from tensorflow.keras.layers import Input, ZeroPadding2D, Dense, Dropout, Activation, Convolution2D, Reshape
 from tensorflow.keras.layers import AveragePooling2D, GlobalAveragePooling2D, MaxPooling2D, BatchNormalization
-
 from tensorflow.keras import Model
 
 def densenet_model(growth_rate=32, nb_filter=64, nb_layers = [6,12,24,16], reduction=0.0, 
