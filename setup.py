@@ -10,9 +10,9 @@ setuptools.setup(
 
      version='0.1',
 
-     author="Gaston Gustavo Rios",
+     author="Gaston Gustavo Rios, Ulises Jeremias Cornejo Fandos",
 
-     author_email="okason1997@hotmail.com",
+     author_email="okason1997@hotmail.com, ulisescf.24@gmail.com",
 
      description="A densenet implementation using tensorflow2",
 
