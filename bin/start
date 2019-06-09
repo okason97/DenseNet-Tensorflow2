@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+. ./scripts/flags/declares.sh
+
+variables["-t"]="tag"
+variables["-n"]="name"
+variables["--sudo"]="sudo"
+
+. ./scripts/flags/arguments.sh
+
+tag=${tag:-"cpu"}
+name=${name:-"dense-net"}
+sudo=${sudo:-"false"}
+
+echo "Creating $name container with tag $tag"
+echo $PWD
+
+u_flag=""
+runtime=""
+
+if [[ $sudo == "false" ]]
+then
+    u_flag="-u $(id -u):$(id -g)"
+fi
+
+if [[ $tag == "gpu" ]]
+then
+    runtime="--runtime=nvidia"
+fi
+
+echo "user flag: ${u_flag:-"-"}"
+echo "runtime: ${runtime:-"-"}"
+
+docker build --build-arg DOCKER_ENV=$tag --rm -f dockerfiles/tf-py3-jupyter.Dockerfile -t $name:$tag . && \
+docker run -v $PWD:/develop -v $PWD/results:/tf/results --rm $u_flag -p 6006:6006 -p 8888:8888 $runtime $name:$tag
