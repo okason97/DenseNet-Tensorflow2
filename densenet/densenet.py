@@ -28,6 +28,7 @@ def densenet_model(growth_rate=32, nb_filter=64, nb_layers = [6,12,24,16], reduc
     x = ZeroPadding2D((1, 1), name='pool1_zeropadding')(x)
     x = MaxPooling2D((3, 3), strides=(2, 2), name='pool1')(x)
     
+    stage = 0
     # Add dense blocks
     for block_idx in range(nb_dense_block - 1):
         stage = block_idx+2
