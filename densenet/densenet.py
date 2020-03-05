@@ -1,16 +1,13 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-import tensorflow as tf
-
 import numpy as np
+import tensorflow as tf
+from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, ZeroPadding2D, Dense, Dropout, Activation, Convolution2D, Reshape
 from tensorflow.keras.layers import AveragePooling2D, GlobalAveragePooling2D, MaxPooling2D, BatchNormalization
 
-from tensorflow.keras import Model
 
 def densenet_model(growth_rate=32, nb_filter=64, nb_layers = [6,12,24,16], reduction=0.0, 
-             dropout_rate=0.0, classes=16, shape=(32, 32, 3), batch_size=32, with_se_layers=True):
+                   dropout_rate=0.0, classes=16, shape=(32, 32, 3), batch_size=32,
+                   with_output_block=True, with_se_layers=True):
     # compute compression factor
     compression = 1.0 - reduction
 
@@ -34,21 +31,24 @@ def densenet_model(growth_rate=32, nb_filter=64, nb_layers = [6,12,24,16], reduc
         stage = block_idx+2
         x, nb_filter = dense_block(x, stage, nb_layers[block_idx], nb_filter, growth_rate, dropout_rate=dropout_rate)
 
-        if (with_se_layers):
+        if with_se_layers:
             x = se_block(x, stage, 'dense', nb_filter)
 
         # Add transition_block
         x = transition_block(x, stage, nb_filter, compression=compression, dropout_rate=dropout_rate)
         nb_filter = int(nb_filter * compression)
 
-        if (with_se_layers):
+        if with_se_layers:
             x = se_block(x, stage, 'transition', nb_filter)
 
     final_stage = stage + 1
     x, nb_filter = dense_block(x, final_stage, nb_layers[-1], nb_filter, growth_rate, dropout_rate=dropout_rate)
 
-    if (with_se_layers):
+    if with_se_layers:
         x = se_block(x, final_stage, 'dense', nb_filter)
+
+    if not with_output_block:
+        return Model(inputs=img_input, outputs=x)
 
     x = BatchNormalization(name='conv_final_blk_bn')(x)
     x = Activation('relu', name='relu_final_blk')(x)
