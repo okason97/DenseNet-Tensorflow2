@@ -1,16 +1,25 @@
 #!/usr/bin/env bash
 
-. ./scripts/flags/declares.sh
+has_param() {
+    local term="$1"
+    shift
+    for arg; do
+        if [[ $arg == "$term" ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+. bin/scripts/flags/declares.sh
 
 variables["-t"]="tag"
 variables["-n"]="name"
-variables["--sudo"]="sudo"
 
-. ./scripts/flags/arguments.sh
+. bin/scripts/flags/arguments.sh
 
 tag=${tag:-"cpu"}
-name=${name:-"dense-net"}
-sudo=${sudo:-"false"}
+name=${name:-"densenet"}
 
 echo "Creating $name container with tag $tag"
 echo $PWD
@@ -18,18 +27,25 @@ echo $PWD
 u_flag=""
 runtime=""
 
-if [[ $sudo == "false" ]]
-then
+if ! has_param '--sudo' "$@"; then
     u_flag="-u $(id -u):$(id -g)"
 fi
 
-if [[ $tag == "gpu" ]]
-then
+if [[ $tag == "gpu" ]]; then
     runtime="--runtime=nvidia"
 fi
 
 echo "user flag: ${u_flag:-"-"}"
 echo "runtime: ${runtime:-"-"}"
 
-docker build --build-arg DOCKER_ENV=$tag --rm -f dockerfiles/tf-py3-jupyter.Dockerfile -t $name:$tag . && \
-docker run -v $PWD:/develop -v $PWD/results:/tf/results --rm $u_flag -p 6006:6006 -p 8888:8888 $runtime $name:$tag
+if has_param '--build' "$@"; then
+    echo "Build docker image"
+    docker build --build-arg DOCKER_ENV=$tag --rm -f dockerfiles/tf-py3-jupyter.Dockerfile -t $name:$tag .
+fi
+
+docker run \
+    -v $PWD:/develop \
+    -v $PWD/results:/tf/results \
+    -v $PWD/data:/tf/data \
+    -v $PWD/src:/tf/src \
+    --rm $u_flag -p 6006:6006 -p 8888:8888 $runtime $name:$tag

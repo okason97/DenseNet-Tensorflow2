@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+. bin/scripts/flags/declares.sh
+
+variables["--mode"]="mode"
+variables["--config"]="config"
+
+. bin/scripts/flags/arguments.sh
+
+mode=${mode:-"train"}
+config=${config:-"cifar10"}
+
+echo "Running $mode mode with $config configuration file"
+
+python src/scripts/$mode/run_$mode.py --config src/config/config_$config.conf
