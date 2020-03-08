@@ -47,11 +47,12 @@ def densenet_model(growth_rate=32, nb_filter=64, nb_layers = [6,12,24,16], reduc
     if with_se_layers:
         x = se_block(x, final_stage, 'dense', nb_filter)
 
-    if not with_output_block:
-        return Model(inputs=img_input, outputs=x)
-
     x = BatchNormalization(name='conv_final_blk_bn')(x)
     x = Activation('relu', name='relu_final_blk')(x)
+    
+    if not with_output_block:
+        return Model(inputs=img_input, outputs=x)
+    
     x = GlobalAveragePooling2D(name='pool_final')(x)
     x = Dense(classes, name='fc6')(x)
     output = Activation('softmax', name='prob')(x)
