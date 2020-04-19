@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/okason97/DenseNet-Tensorflow2",
     packages=setuptools.find_packages(),
     install_requires=[
-    'tensorflow==2.0.0-alpha0',
+    'tensorflow',
     'numpy',
     ],
     classifiers=[
